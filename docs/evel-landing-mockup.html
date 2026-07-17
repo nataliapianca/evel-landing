@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVEL — Ateliê de Moda Fitness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+/* ============================================
+   1. TOKENS — paleta, tipografia, espaçamento
+   ============================================ */
+:root{
+  --burgundy:#6B1E32;
+  --burgundy-dark:#3F1220;
+  --cream:#F7F1E6;
+  --cream-soft:#FBF8F2;
+  --forest:#1F3327;
+  --blush:#E9C6D2;
+  --white:#FFFFFF;
+
+  --display:'Newsreader', serif;
+  --body:'Inter', sans-serif;
+
+  --radius:18px;
+  --radius-sm:10px;
+  --gap:24px;
+  --container:1180px;
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--body);
+  color:var(--forest);
+  background:var(--cream-soft);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{display:block; max-width:100%;}
+a{color:inherit; text-decoration:none;}
+.wrap{max-width:var(--container); margin:0 auto; padding:0 24px;}
+.eyebrow{
+  font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--burgundy); font-weight:600; margin-bottom:10px; display:block;
+}
+h1,h2,h3{font-family:var(--display); font-weight:500; color:var(--forest); line-height:1.15;}
+h2{font-size:clamp(1.7rem,3vw,2.4rem); font-style:italic;}
+.section{padding:88px 0;}
+.section-head{max-width:560px; margin-bottom:48px;}
+.btn{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:15px 30px; border-radius:100px; font-weight:600; font-size:.92rem;
+  cursor:pointer; border:1px solid transparent; transition:.2s ease;
+}
+.btn-primary{background:var(--burgundy); color:var(--white);}
+.btn-primary:hover{background:var(--burgundy-dark);}
+.btn-outline{background:transparent; border-color:var(--forest); color:var(--forest);}
+.btn-outline:hover{background:var(--forest); color:var(--white);}
+.btn-sm{padding:10px 18px; font-size:.8rem; width:100%; justify-content:center;}
+
+/* placeholder de imagem — substituir pelas fotos reais da marca */
+.ph{
+  background:
+    repeating-linear-gradient(135deg, rgba(31,51,39,.06) 0 2px, transparent 2px 14px),
+    linear-gradient(160deg, var(--blush) 0%, var(--burgundy) 100%);
+  position:relative; overflow:hidden; border-radius:var(--radius);
+}
+.ph::after{
+  content:attr(data-label);
+  position:absolute; bottom:14px; left:14px;
+  font-size:.68rem; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--cream); background:rgba(31,51,39,.55);
+  padding:5px 10px; border-radius:100px; font-style:italic;
+}
+
+/* ============================================
+   2. NAVBAR
+   ============================================ */
+.nav{
+  position:fixed; top:0; left:0; right:0; z-index:50;
+  padding:20px 0; transition:.3s ease;
+}
+.nav.scrolled{background:var(--cream-soft); box-shadow:0 1px 0 rgba(31,51,39,.08); padding:14px 0;}
+.nav .wrap{display:flex; align-items:center; justify-content:space-between;}
+.logo{font-family:var(--display); font-style:italic; font-size:1.6rem; color:var(--burgundy); font-weight:500;}
+.nav-links{display:flex; gap:32px; font-size:.88rem; font-weight:500;}
+.nav-links a{opacity:.8;}
+.nav-links a:hover{opacity:1;}
+.nav-cta{display:flex; align-items:center; gap:18px;}
+.burger{display:none; flex-direction:column; gap:5px; cursor:pointer;}
+.burger span{width:22px; height:2px; background:var(--forest);}
+
+/* ============================================
+   3. HERO
+   ============================================ */
+.hero{padding-top:150px; padding-bottom:70px;}
+.hero .wrap{display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;}
+.hero-text h1{font-size:clamp(2.4rem,4.4vw,3.6rem); font-style:italic; margin-bottom:20px;}
+.hero-text p{font-size:1.05rem; opacity:.8; max-width:420px; margin-bottom:32px;}
+.hero-img .ph{aspect-ratio:4/5;}
+.stitch{
+  border-top:1px dashed rgba(31,51,39,.25); margin:0;
+}
+
+/* ============================================
+   4. CATEGORIAS
+   ============================================ */
+.cat-grid{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:var(--gap);
+}
+.cat-card{cursor:pointer;}
+.cat-card .ph{aspect-ratio:3/4; margin-bottom:14px;}
+.cat-card h3{font-size:1.05rem; font-style:italic;}
+
+/* ============================================
+   5. PRODUTOS
+   ============================================ */
+.prod-grid{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:var(--gap);
+}
+.prod-card{
+  background:var(--white); border-radius:var(--radius); overflow:hidden;
+  border:1px solid rgba(31,51,39,.08); position:relative;
+}
+.prod-card .ph{border-radius:0; aspect-ratio:3/4;}
+.tag{
+  position:absolute; top:14px; right:14px; background:var(--cream-soft);
+  color:var(--burgundy); font-family:var(--display); font-style:italic;
+  width:34px; height:34px; border-radius:50%; display:flex; align-items:center;
+  justify-content:center; font-size:1.1rem; box-shadow:0 2px 6px rgba(0,0,0,.12);
+}
+.prod-body{padding:20px;}
+.prod-body h3{font-size:1.05rem; margin-bottom:6px;}
+.prod-body p{font-size:.85rem; opacity:.75; margin-bottom:16px;}
+
+/* ============================================
+   6. SOBRE
+   ============================================ */
+.about .wrap{display:grid; grid-template-columns:.9fr 1.1fr; gap:56px; align-items:center;}
+.about .ph{aspect-ratio:1/1;}
+.about p{opacity:.85; margin-bottom:16px; max-width:480px;}
+
+/* ============================================
+   7. BENEFÍCIOS
+   ============================================ */
+.benef{background:var(--forest); color:var(--cream);}
+.benef .eyebrow{color:var(--blush);}
+.benef h2{color:var(--cream);}
+.benef-grid{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:var(--gap); margin-top:40px;
+}
+.benef-item{border-top:1px dashed rgba(247,241,230,.3); padding-top:18px;}
+.benef-item svg{width:26px; height:26px; margin-bottom:14px; stroke:var(--blush);}
+.benef-item h3{color:var(--cream); font-size:1rem; font-style:italic; margin-bottom:6px;}
+.benef-item p{font-size:.85rem; opacity:.75;}
+
+/* ============================================
+   8. GALERIA — mosaico assimétrico
+   ============================================ */
+.gallery-grid{
+  display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:140px; gap:12px;
+}
+.gallery-grid .ph:nth-child(1){grid-column:span 2; grid-row:span 2;}
+.gallery-grid .ph:nth-child(4){grid-column:span 2;}
+.gallery-grid .ph{border-radius:var(--radius-sm);}
+
+/* ============================================
+   9. DEPOIMENTOS
+   ============================================ */
+.testi-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--gap);}
+.testi-card{
+  background:var(--white); border:1px solid rgba(31,51,39,.08);
+  border-radius:var(--radius); padding:28px;
+}
+.quote-mark{font-family:var(--display); font-style:italic; font-size:2.4rem; color:var(--blush); line-height:1;}
+.testi-card p{margin:14px 0 18px; font-size:.92rem; opacity:.85;}
+.testi-name{font-size:.82rem; font-weight:600; letter-spacing:.02em;}
+
+/* ============================================
+   10. CTA FINAL
+   ============================================ */
+.cta-final{
+  background:var(--burgundy); color:var(--cream-soft); text-align:center;
+  border-radius:28px; margin:0 24px; padding:80px 24px;
+}
+.cta-final h2{color:var(--cream-soft); margin-bottom:14px;}
+.cta-final p{opacity:.85; max-width:420px; margin:0 auto 32px;}
+.cta-final .btn-primary{background:var(--cream-soft); color:var(--burgundy); padding:18px 40px; font-size:1rem;}
+.cta-final .btn-primary:hover{background:var(--white);}
+
+/* ============================================
+   11. FOOTER
+   ============================================ */
+footer{padding:56px 0 28px;}
+.footer-top{
+  display:flex; justify-content:space-between; align-items:flex-start;
+  padding-bottom:32px; border-bottom:1px dashed rgba(31,51,39,.2); flex-wrap:wrap; gap:24px;
+}
+.footer-links{display:flex; gap:28px; font-size:.85rem;}
+.footer-bottom{
+  display:flex; justify-content:space-between; padding-top:20px;
+  font-size:.78rem; opacity:.6; flex-wrap:wrap; gap:10px;
+}
+
+/* ============================================
+   12. RESPONSIVO
+   ============================================ */
+@media(max-width:900px){
+  .hero .wrap, .about .wrap{grid-template-columns:1fr;}
+  .about{display:flex; flex-direction:column-reverse;}
+  .cat-grid{grid-template-columns:repeat(2,1fr);}
+  .prod-grid{grid-template-columns:repeat(2,1fr);}
+  .benef-grid{grid-template-columns:repeat(2,1fr);}
+  .testi-grid{grid-template-columns:1fr;}
+  .gallery-grid{grid-template-columns:repeat(2,1fr);}
+  .nav-links{display:none;}
+  .burger{display:flex;}
+}
+@media(max-width:560px){
+  .cat-grid,.prod-grid,.benef-grid{grid-template-columns:1fr 1fr;}
+  .section{padding:64px 0;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <span class="logo">Evel</span>
+    <div class="nav-links">
+      <a href="#categorias">Categorias</a>
+      <a href="#produtos">Produtos</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#depoimentos">Depoimentos</a>
+    </div>
+    <div class="nav-cta">
+      <a class="btn btn-primary" href="#" data-wa data-msg="Olá! Vim pelo site e queria saber mais sobre a Evel.">Falar no WhatsApp</a>
+      <div class="burger"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-text">
+      <span class="eyebrow">Ateliê de moda fitness · Vila Velha, ES</span>
+      <h1>Feita para o seu movimento.</h1>
+      <p>Peças autorais, produzidas à mão, com modelagem que acompanha o corpo em cada treino — da academia à rua.</p>
+      <a class="btn btn-primary" href="#" data-wa data-msg="Olá! Vim pelo site e queria saber mais sobre a Evel.">Falar no WhatsApp</a>
+    </div>
+    <div class="hero-img">
+      <div class="ph" data-label="Foto da marca"></div>
+    </div>
+  </div>
+</header>
+
+<hr class="stitch">
+
+<!-- CATEGORIAS -->
+<section class="section" id="categorias">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Coleção</span>
+      <h2>Encontre o seu conjunto ideal</h2>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card"><div class="ph" data-label="Leggings"></div><h3>Leggings</h3></div>
+      <div class="cat-card"><div class="ph" data-label="Tops"></div><h3>Tops</h3></div>
+      <div class="cat-card"><div class="ph" data-label="Shorts"></div><h3>Shorts</h3></div>
+      <div class="cat-card"><div class="ph" data-label="Conjuntos"></div><h3>Conjuntos</h3></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUTOS EM DESTAQUE -->
+<section class="section" id="produtos" style="background:var(--cream);">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Destaques</span>
+      <h2>Peças que a gente mais ama</h2>
+    </div>
+    <div class="prod-grid" id="prod-grid">
+      <!-- os 3 cards abaixo são gerados também via JS (ver PRODUCTS no script) -->
+      <div class="prod-card" data-name="Conjunto Essential Bordô">
+        <div class="tag">E</div>
+        <div class="ph" data-label="Foto do produto"></div>
+        <div class="prod-body">
+          <h3>Conjunto Essential Bordô</h3>
+          <p>Top + short em compressão, acabamento em contraste.</p>
+          <a class="btn btn-outline btn-sm" href="#" data-wa>Tenho interesse neste produto</a>
+        </div>
+      </div>
+      <div class="prod-card" data-name="Legging High Waist Preta">
+        <div class="tag">E</div>
+        <div class="ph" data-label="Foto do produto"></div>
+        <div class="prod-body">
+          <h3>Legging High Waist Preta</h3>
+          <p>Cintura alta, tecido fio duplo, zero transparência.</p>
+          <a class="btn btn-outline btn-sm" href="#" data-wa>Tenho interesse neste produto</a>
+        </div>
+      </div>
+      <div class="prod-card" data-name="Top Duo Strap Blush">
+        <div class="tag">E</div>
+        <div class="ph" data-label="Foto do produto"></div>
+        <div class="prod-body">
+          <h3>Top Duo Strap Blush</h3>
+          <p>Alças duplas, sustentação média, caimento leve.</p>
+          <a class="btn btn-outline btn-sm" href="#" data-wa>Tenho interesse neste produto</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section class="section about" id="sobre">
+  <div class="wrap">
+    <div class="ph" data-label="Ateliê Evel"></div>
+    <div>
+      <span class="eyebrow">A marca</span>
+      <h2>Um ateliê 100% capixaba, feito à mão.</h2>
+      <p>A Evel nasceu para valorizar a beleza e a autoestima de quem se movimenta. Cada peça passa por um processo de produção autoral, com trabalho manual em todas as etapas — do corte à costura.</p>
+      <p>São três anos dedicados a estudar tecidos e modelagens que vestem perfeitamente o corpo, unindo conforto e versatilidade para acompanhar você em diferentes ocasiões.</p>
+      <a class="btn btn-outline" href="#" data-wa data-msg="Olá! Queria conhecer mais sobre a história da Evel.">Conheça o ateliê</a>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFÍCIOS -->
+<section class="section benef">
+  <div class="wrap">
+    <span class="eyebrow">Por que Evel</span>
+    <h2>Feito para durar o treino inteiro</h2>
+    <div class="benef-grid">
+      <div class="benef-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 2 3 7v6c0 5 4 9 9 9s9-4 9-9V7l-9-5Z"/></svg>
+        <h3>Alta compressão</h3>
+        <p>Sustentação ideal para musculação e treino funcional.</p>
+      </div>
+      <div class="benef-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg>
+        <h3>Tecido confortável</h3>
+        <p>Toque macio e respirável do aquecimento à corrida.</p>
+      </div>
+      <div class="benef-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M4 4h16v6H4zM4 14h10v6H4z"/></svg>
+        <h3>Modelagem premium</h3>
+        <p>Corte pensado para valorizar cada tipo de corpo.</p>
+      </div>
+      <div class="benef-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M3 12h18M12 3v18"/></svg>
+        <h3>Entrega rápida</h3>
+        <p>Combinado direto com você pelo WhatsApp.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIA -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Instagram</span>
+      <h2>@atelier.evel</h2>
+    </div>
+    <div class="gallery-grid">
+      <div class="ph" data-label="Post 1"></div>
+      <div class="ph" data-label="Post 2"></div>
+      <div class="ph" data-label="Post 3"></div>
+      <div class="ph" data-label="Post 4"></div>
+      <div class="ph" data-label="Post 5"></div>
+      <div class="ph" data-label="Post 6"></div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="section" id="depoimentos" style="background:var(--cream);">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Clientes</span>
+      <h2>Quem já vestiu, aprovou</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <span class="quote-mark">“</span>
+        <p>Modelagem perfeita e o tecido não marca nem transparece, mesmo em treino pesado.</p>
+        <span class="testi-name">Camila R.</span>
+      </div>
+      <div class="testi-card">
+        <span class="quote-mark">“</span>
+        <p>Comprei um conjunto e já virei cliente fixa. Atendimento pelo WhatsApp super rápido.</p>
+        <span class="testi-name">Beatriz A.</span>
+      </div>
+      <div class="testi-card">
+        <span class="quote-mark">“</span>
+        <p>Dá pra ver que é feito à mão, o acabamento é impecável. Virou meu preferido pra correr.</p>
+        <span class="testi-name">Larissa M.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="section">
+  <div class="cta-final">
+    <h2>Pronta para o seu próximo treino?</h2>
+    <p>Fale direto com a gente pelo WhatsApp e monte o seu conjunto Evel.</p>
+    <a class="btn btn-primary" href="#" data-wa data-msg="Olá! Quero fazer meu pedido na Evel.">Quero fazer meu pedido</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <span class="logo" style="font-size:1.3rem;">Evel</span>
+      <div class="footer-links">
+        <a href="#" target="_blank">Instagram</a>
+        <a href="#" data-wa data-msg="Olá! Vim pelo site e queria saber mais sobre a Evel.">WhatsApp</a>
+        <a href="#">Vila Velha - ES</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Evel. Todos os direitos reservados.</span>
+      <span>Ateliê de produção autoral.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============================================
+   CONFIG — troque pelo número real da loja
+   ============================================ */
+const WHATSAPP_NUMBER = "5527900000000"; // formato: código do país + DDD + número, sem espaços
+
+/* navbar muda de estilo ao rolar a página */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 30);
+});
+
+/* monta o link do WhatsApp com mensagem pré-preenchida
+   - botões genéricos usam data-msg fixo
+   - botões dentro de .prod-card usam o nome do produto automaticamente */
+function buildWaLink(message){
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+document.querySelectorAll('[data-wa]').forEach(btn => {
+  const productCard = btn.closest('.prod-card');
+  let message = btn.dataset.msg;
+
+  if (!message && productCard) {
+    const productName = productCard.dataset.name;
+    message = `Olá! Tenho interesse na ${productName}. Gostaria de saber disponibilidade.`;
+  }
+  if (!message) message = "Olá! Vim pelo site e queria saber mais sobre a Evel.";
+
+  btn.setAttribute('href', buildWaLink(message));
+  btn.setAttribute('target', '_blank');
+});
+</script>
+
+</body>
+</html>
