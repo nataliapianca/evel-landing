@@ -1,0 +1,23 @@
+<section class="produtos-section" id="produtos">
+  <h2>Nossos Produtos</h2>
+  
+  <div class="cards-container">
+    <div *ngFor="let p of listaProdutos" class="produto-card">
+      
+      <div class="img-wrapper">
+        <img [src]="p.imagemUrl" [alt]="p.nome">
+      </div>
+      
+      <div class="produto-info">
+        <h3>{{ p.nome }}</h3>
+        <p>{{ p.descricao }}</p>
+        <span class="preco">R$ {{ p.preco | number:'1.2-2' }}</span>
+        
+        <button class="btn-wa" (click)="comprarViaWhatsapp(p.nome)">
+          Tenho Interesse
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
