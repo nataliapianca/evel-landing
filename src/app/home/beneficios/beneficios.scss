@@ -1,0 +1,10 @@
+section { color: var(--color-cream); background: var(--color-forest); }
+.eyebrow { color: var(--color-blush); }
+h2, h3 { color: var(--color-cream); }
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--gap); margin-top: 40px; }
+article { padding-top: 18px; border-top: 1px dashed rgb(247 241 230 / 30%); }
+article > span { display: block; margin-bottom: 14px; color: var(--color-blush); font-size: 1.7rem; }
+h3 { margin-bottom: 6px; font-size: 1rem; font-style: italic; }
+p { margin: 0; font-size: .85rem; opacity: .75; }
+@media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .grid { grid-template-columns: 1fr; } }

@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  min-height: 180px;
+  border-radius: var(--radius);
+  background: repeating-linear-gradient(135deg, rgb(31 51 39 / 6%) 0 2px, transparent 2px 14px), linear-gradient(160deg, var(--color-blush), var(--color-burgundy));
+}
+
+span {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: var(--color-cream);
+  background: rgb(31 51 39 / 55%);
+  font-size: .68rem;
+  font-style: italic;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
