@@ -1,23 +1,28 @@
-<section class="produtos-section" id="produtos">
-  <h2>Nossos Produtos</h2>
-  
-  <div class="cards-container">
-    <div *ngFor="let p of listaProdutos" class="produto-card">
-      
-      <div class="img-wrapper">
-        <img [src]="p.imagemUrl" [alt]="p.nome">
-      </div>
-      
-      <div class="produto-info">
-        <h3>{{ p.nome }}</h3>
-        <p>{{ p.descricao }}</p>
-        <span class="preco">R$ {{ p.preco | number:'1.2-2' }}</span>
-        
-        <button class="btn-wa" (click)="comprarViaWhatsapp(p.nome)">
-          Tenho Interesse
-        </button>
-      </div>
+<section class="section" id="produtos">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Destaques</span>
+      <h2>Peças que a gente mais ama</h2>
+    </div>
 
+    <div class="prod-grid">
+      <article *ngFor="let p of listaProdutos" class="prod-card">
+        <div class="img-wrapper">
+          <img [src]="p.imagemUrl" [alt]="p.nome">
+        </div>
+        <div class="produto-info">
+          <h3>{{ p.nome }}</h3>
+          <p>{{ p.descricao }}</p>
+          <strong>R$ {{ p.preco | number:'1.2-2' }}</strong>
+          <button class="btn btn-outline" type="button" (click)="comprarViaWhatsapp(p.nome)">
+            Tenho interesse
+          </button>
+        </div>
+      </article>
+
+      <p class="empty" *ngIf="listaProdutos.length === 0">
+        Os produtos serão exibidos aqui assim que estiverem disponíveis.
+      </p>
     </div>
   </div>
 </section>
