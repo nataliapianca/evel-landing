@@ -1,29 +1,138 @@
-<div class="admin-container">
-  <h2>Painel Administrativo - Cadastrar Produto</h2>
+<main class="admin-page">
+  <div class="admin-shell">
+    <header class="admin-header">
+      <a class="brand" routerLink="/">Evel.</a>
+      <nav aria-label="Navegação administrativa">
+        <a routerLink="/admin/dashboard">Dashboard</a>
+        <a routerLink="/admin/produtos/lista">Produtos</a>
+      </nav>
+    </header>
 
-  <form [formGroup]="produtoForm" (ngSubmit)="salvarProduto()">
-    <div class="form-group">
-      <label>Nome do Produto:</label>
-      <input type="text" formControlName="nome" placeholder="Ex: Bolo de Chocolate">
-    </div>
+    <section class="form-card" aria-labelledby="product-form-title">
+      <a class="back-link" routerLink="/admin/produtos/lista">← Voltar para produtos</a>
 
-    <div class="form-group">
-      <label>Descrição:</label>
-      <textarea formControlName="descricao" placeholder="Detalhes do produto..."></textarea>
-    </div>
+      <div class="form-heading">
+        <span class="eyebrow">{{ modoEdicao ? 'Editar peça' : 'Nova peça' }}</span>
+        <h1 id="product-form-title">
+          {{ modoEdicao ? 'Editar produto' : 'Cadastrar produto' }}
+        </h1>
+        <p>
+          {{ modoEdicao
+            ? 'Atualize as informações desejadas. Uma nova foto é opcional.'
+            : 'Preencha os dados que serão exibidos no catálogo público.' }}
+        </p>
+      </div>
 
-    <div class="form-group">
-      <label>Preço (R$):</label>
-      <input type="number" formControlName="preco" placeholder="0.00">
-    </div>
+      <aside
+        class="mock-notice"
+        *ngIf="modoEdicao"
+        aria-label="Aviso sobre o modo de demonstração"
+      >
+        <strong>Modo de demonstração:</strong> esta edição não altera o servidor e volta ao
+        recarregar a página.
+      </aside>
 
-    <div class="form-group">
-      <label>Foto do Produto:</label>
-      <input type="file" (change)="onFileSelected($event)" accept="image/*">
-    </div>
+      <p class="feedback" *ngIf="carregandoProduto" role="status">Carregando produto...</p>
+      <p class="feedback success" *ngIf="mensagemSucesso" role="status">
+        {{ mensagemSucesso }}
+      </p>
+      <p class="feedback error" *ngIf="mensagemErro" role="alert">{{ mensagemErro }}</p>
 
-    <button type="submit" [disabled]="produtoForm.invalid">Salvar Produto na Nuvem</button>
-  </form>
+      <form
+        *ngIf="!edicaoBloqueada"
+        [formGroup]="produtoForm"
+        [attr.aria-busy]="salvando || carregandoProduto"
+        (ngSubmit)="salvarProduto()"
+        novalidate
+      >
+        <fieldset [disabled]="salvando || carregandoProduto">
+          <div class="form-group">
+            <label for="product-name">Nome do produto</label>
+            <input
+              id="product-name"
+              type="text"
+              formControlName="nome"
+              placeholder="Ex.: Conjunto Energy"
+              required
+              [attr.aria-invalid]="campoInvalido('nome')"
+              [attr.aria-describedby]="campoInvalido('nome') ? 'product-name-error' : null"
+            >
+            <small id="product-name-error" *ngIf="campoInvalido('nome')">
+              Informe o nome do produto.
+            </small>
+          </div>
 
-  <p *ngIf="mensagemSucesso" class="sucesso">{{ mensagemSucesso }}</p>
-</div>
+          <div class="form-group">
+            <label for="product-description">Descrição</label>
+            <textarea
+              id="product-description"
+              formControlName="descricao"
+              rows="5"
+              placeholder="Descreva os detalhes da peça..."
+              required
+              [attr.aria-invalid]="campoInvalido('descricao')"
+              [attr.aria-describedby]="campoInvalido('descricao') ? 'product-description-error' : null"
+            ></textarea>
+            <small id="product-description-error" *ngIf="campoInvalido('descricao')">
+              Informe a descrição do produto.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="product-price">Preço (R$)</label>
+            <input
+              id="product-price"
+              type="number"
+              min="0"
+              step="0.01"
+              inputmode="decimal"
+              formControlName="preco"
+              placeholder="0,00"
+              required
+              [attr.aria-invalid]="campoInvalido('preco')"
+              [attr.aria-describedby]="campoInvalido('preco') ? 'product-price-error' : null"
+            >
+            <small id="product-price-error" *ngIf="campoInvalido('preco')">
+              Informe um preço igual ou maior que zero.
+            </small>
+          </div>
+
+          <div class="form-group image-field">
+            <label for="product-image">
+              {{ modoEdicao ? 'Trocar imagem (opcional)' : 'Foto do produto' }}
+            </label>
+            <input
+              #fileInput
+              id="product-image"
+              type="file"
+              (change)="onFileSelected($event)"
+              accept="image/*"
+              [required]="!modoEdicao"
+              [attr.aria-invalid]="fotoInvalida"
+              [attr.aria-describedby]="fotoInvalida ? 'product-image-error' : null"
+            >
+            <small id="product-image-error" *ngIf="fotoInvalida">
+              Selecione uma foto do produto.
+            </small>
+            <small *ngIf="arquivoSelecionado">Arquivo: {{ arquivoSelecionado.name }}</small>
+
+            <div class="current-image" *ngIf="modoEdicao && imagemAtual">
+              <img [src]="imagemAtual" alt="Imagem atual do produto">
+              <span>Imagem atual</span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <a routerLink="/admin/produtos/lista">Cancelar</a>
+            <button
+              type="submit"
+              [disabled]="salvando || carregandoProduto || edicaoBloqueada"
+            >
+              {{ salvando ? 'Salvando...' : (modoEdicao ? 'Salvar alterações' : 'Cadastrar produto') }}
+            </button>
+          </div>
+        </fieldset>
+      </form>
+    </section>
+  </div>
+</main>

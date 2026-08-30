@@ -5,4 +5,6 @@ export interface Product {
   descricao: string;
   preco: number;
   imagemUrl: string;
+  tamanhos?: string[];
+  cores?: string[];
 }

@@ -1,0 +1,23 @@
+:host { display: block; min-height: 100vh; }
+.admin-page { min-height: 100vh; padding: 28px 0 72px; background: var(--color-cream-soft); }
+.admin-shell { width: min(100% - 48px, var(--container)); margin-inline: auto; }
+.admin-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 24px; border-bottom: 1px solid rgb(31 51 39 / 18%); }
+.brand { color: var(--color-burgundy-dark); font-family: var(--font-display); font-size: 1.65rem; font-weight: 800; }
+.admin-header button { padding: 9px 18px; border: 1px solid var(--color-forest); border-radius: 999px; color: var(--color-forest); background: transparent; cursor: pointer; font-weight: 700; }
+.admin-header button:hover { color: var(--color-white); background: var(--color-forest); }
+.dashboard-intro { max-width: 720px; padding-block: clamp(64px, 9vw, 120px) 44px; }
+.dashboard-intro h1 { margin-bottom: 18px; color: var(--color-burgundy-dark); font-size: clamp(2.6rem, 6vw, 5.6rem); letter-spacing: -.05em; }
+.dashboard-intro p { max-width: 580px; margin: 0; font-size: 1.05rem; opacity: .72; }
+.eyebrow { color: #6b1e32; }
+.mock-notice { margin-bottom: 24px; padding: 13px 15px; border: 1px solid rgb(107 30 50 / 35%); border-radius: var(--radius-sm); color: #5f172d; background: rgb(233 198 210 / 35%); font-size: .8rem; }
+.dashboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.action-card { display: grid; grid-template-rows: auto 1fr auto; min-height: 300px; padding: 26px; border: 1px solid rgb(31 51 39 / 22%); border-radius: var(--radius); background: var(--color-white); transition: transform .2s ease, box-shadow .2s ease; }
+.action-card:hover { transform: translateY(-4px); box-shadow: 0 16px 35px rgb(31 51 39 / 12%); }
+.action-card:focus-visible, .admin-header button:focus-visible, .brand:focus-visible { outline: 3px solid var(--color-forest); outline-offset: 3px; }
+.primary-card { color: var(--color-white); background: var(--color-forest); }
+.card-number { font-size: .72rem; font-weight: 700; letter-spacing: .12em; opacity: .65; }
+.action-card strong { display: block; margin-bottom: 12px; font-family: var(--font-display); font-size: 1.55rem; }
+.action-card p { margin: 0; font-size: .86rem; opacity: .72; }
+.arrow { justify-self: end; font-size: 1.6rem; }
+@media (max-width: 840px) { .dashboard-grid { grid-template-columns: 1fr; } .action-card { min-height: 220px; } }
+@media (max-width: 560px) { .admin-shell { width: min(100% - 32px, var(--container)); } .dashboard-intro { padding-top: 58px; } }

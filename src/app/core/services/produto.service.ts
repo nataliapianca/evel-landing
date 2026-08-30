@@ -1,7 +1,7 @@
 // src/app/core/services/produto.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, delay, map, of } from 'rxjs';
 import { Product } from '../../shared/models/product.model';
 
 @Injectable({
@@ -19,8 +19,22 @@ export class ProdutoService {
     return this.http.get<Product[]>(this.apiUrl);
   }
 
+  buscarPorId(id: string): Observable<Product | undefined> {
+    return this.listar().pipe(map((produtos) => produtos.find((produto) => produto.id === id)));
+  }
+
   // Envia a foto e os dados preenchidos pelo ADM para o backend
   criarProduto(formData: FormData): Observable<Product> {
     return this.http.post<Product>(this.apiUrl, formData);
+  }
+
+  // TODO: substituir pelo DELETE real quando a autenticação da API estiver pronta.
+  deleteProduct(id: string): Observable<{ message: string }> {
+    return of({ message: `Produto ${id} deletado` }).pipe(delay(500));
+  }
+
+  // TODO: substituir pelo PUT real quando a autenticação da API estiver pronta.
+  updateProduct(id: string, _formData: FormData): Observable<{ message: string }> {
+    return of({ message: `Produto ${id} atualizado` }).pipe(delay(500));
   }
 }

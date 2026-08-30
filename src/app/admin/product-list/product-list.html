@@ -1,0 +1,65 @@
+<main class="admin-page">
+  <div class="admin-shell">
+    <header class="admin-header">
+      <a class="brand" routerLink="/">Evel.</a>
+      <nav aria-label="Navegação administrativa">
+        <a routerLink="/admin/dashboard">Dashboard</a>
+        <a class="active" routerLink="/admin/produtos/lista" aria-current="page">Produtos</a>
+      </nav>
+    </header>
+
+    <section class="page-heading" aria-labelledby="product-list-title">
+      <div>
+        <span class="eyebrow">Catálogo</span>
+        <h1 id="product-list-title">Gerenciar produtos</h1>
+        <p>Consulte as peças cadastradas e acesse as ações disponíveis.</p>
+      </div>
+      <a class="new-product" routerLink="/admin/produtos/novo">+ Novo produto</a>
+    </section>
+
+    <aside class="mock-notice" aria-label="Aviso sobre o modo de demonstração">
+      <strong>Modo de demonstração:</strong> editar e excluir ainda não alteram o servidor e
+      voltam ao recarregar a página.
+    </aside>
+
+    <p class="feedback success" *ngIf="mensagemSucesso" role="status">
+      {{ mensagemSucesso }}
+    </p>
+    <p class="feedback error" *ngIf="mensagemErro" role="alert">{{ mensagemErro }}</p>
+    <p class="state-card" *ngIf="carregando" role="status">Carregando produtos...</p>
+
+    <ul class="product-list" *ngIf="!carregando && produtos.length > 0">
+      <li *ngFor="let produto of produtos; trackBy: trackByProduto" class="product-row">
+        <img [src]="produto.imagemUrl" [alt]="produto.nome">
+        <div class="product-copy">
+          <strong>{{ produto.nome }}</strong>
+          <p>{{ produto.descricao }}</p>
+        </div>
+        <span class="price">R$ {{ produto.preco | number: '1.2-2' }}</span>
+
+        <div class="actions">
+          <ng-container *ngIf="produto.id as produtoId; else produtoSemId">
+            <a [routerLink]="['/admin/produtos/editar', produtoId]" [attr.aria-label]="'Editar ' + produto.nome">
+              Editar
+            </a>
+            <button
+              type="button"
+              [disabled]="excluindoId !== null"
+              [attr.aria-label]="'Excluir ' + produto.nome"
+              (click)="excluirProduto(produto, produtoId)"
+            >
+              {{ excluindoId === produtoId ? 'Excluindo...' : 'Excluir' }}
+            </button>
+          </ng-container>
+          <ng-template #produtoSemId><small>Ações indisponíveis</small></ng-template>
+        </div>
+      </li>
+    </ul>
+
+    <div class="state-card" *ngIf="!carregando && !mensagemErro && produtos.length === 0">
+      <strong>Nenhum produto cadastrado.</strong>
+      <p>Cadastre a primeira peça para começar a montar o catálogo.</p>
+      <a routerLink="/admin/produtos/novo">Cadastrar produto</a>
+    </div>
+  </div>
+</main>

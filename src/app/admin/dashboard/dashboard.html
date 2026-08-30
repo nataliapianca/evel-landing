@@ -1,0 +1,48 @@
+<main class="admin-page">
+  <div class="admin-shell">
+    <header class="admin-header">
+      <a class="brand" routerLink="/">Evel.</a>
+      <button type="button" (click)="sair()">Sair</button>
+    </header>
+
+    <section class="dashboard-intro" aria-labelledby="dashboard-title">
+      <span class="eyebrow">Painel administrativo</span>
+      <h1 id="dashboard-title">O que vamos organizar hoje?</h1>
+      <p>Cadastre novas peças ou gerencie o catálogo que aparece para suas clientes.</p>
+    </section>
+
+    <aside class="mock-notice" aria-label="Aviso sobre o modo de demonstração">
+      <strong>Demonstração:</strong> o login protege somente esta navegação local; a API ainda
+      precisa receber autenticação real.
+    </aside>
+
+    <nav class="dashboard-grid" aria-label="Ações administrativas">
+      <a class="action-card primary-card" routerLink="/admin/produtos/novo">
+        <span class="card-number" aria-hidden="true">01</span>
+        <div>
+          <strong>Cadastrar produto</strong>
+          <p>Adicione uma nova peça, preço, descrição e fotografia.</p>
+        </div>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a class="action-card" routerLink="/admin/produtos/lista">
+        <span class="card-number" aria-hidden="true">02</span>
+        <div>
+          <strong>Gerenciar produtos</strong>
+          <p>Visualize o catálogo e acesse as ações de editar ou excluir.</p>
+        </div>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a class="action-card" routerLink="/">
+        <span class="card-number" aria-hidden="true">03</span>
+        <div>
+          <strong>Ver a loja</strong>
+          <p>Confira como os produtos estão aparecendo na página pública.</p>
+        </div>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </div>
+</main>

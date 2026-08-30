@@ -6,21 +6,89 @@
     </div>
 
     <div class="prod-grid">
-      <article *ngFor="let p of listaProdutos" class="prod-card">
+      <article *ngFor="let p of listaProdutos; let i = index" class="prod-card">
         <div class="img-wrapper">
           <img [src]="p.imagemUrl" [alt]="p.nome">
         </div>
-        <div class="produto-info">
+        <form
+          #pedidoForm="ngForm"
+          class="produto-info"
+          novalidate
+          (ngSubmit)="comprarViaWhatsapp(p.nome, tamanho.value, cor.value)"
+        >
           <h3>{{ p.nome }}</h3>
           <p>{{ p.descricao }}</p>
-          <strong>R$ {{ p.preco | number:'1.2-2' }}</strong>
-          <button class="btn btn-outline" type="button" (click)="comprarViaWhatsapp(p.nome)">
-            Tenho interesse
+          <strong>R$ {{ p.preco | number: '1.2-2' }}</strong>
+
+          <div class="produto-opcoes">
+            <div class="produto-opcao">
+              <label [for]="'tamanho-' + i">Tamanho</label>
+              <select
+                #tamanho="ngModel"
+                [id]="'tamanho-' + i"
+                [attr.aria-describedby]="'disponibilidade-' + i"
+                [disabled]="!produtoTemOpcoes(p)"
+                name="tamanho"
+                ngModel
+                required
+              >
+                <option value="" selected disabled>Selecione</option>
+                <option *ngFor="let opcao of opcoesDeTamanho(p)" [value]="opcao">
+                  {{ opcao }}
+                </option>
+              </select>
+            </div>
+
+            <div class="produto-opcao">
+              <label [for]="'cor-' + i">Cor</label>
+              <select
+                #cor="ngModel"
+                [id]="'cor-' + i"
+                [attr.aria-describedby]="'disponibilidade-' + i"
+                [disabled]="!produtoTemOpcoes(p)"
+                name="cor"
+                ngModel
+                required
+              >
+                <option value="" selected disabled>Selecione</option>
+                <option *ngFor="let opcao of opcoesDeCor(p)" [value]="opcao">
+                  {{ opcao }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <small
+            *ngIf="produtoTemOpcoes(p); else produtoIndisponivel"
+            class="disponibilidade"
+            [id]="'disponibilidade-' + i"
+          >
+            Selecione tamanho e cor. A disponibilidade será confirmada pelo WhatsApp.
+          </small>
+          <ng-template #produtoIndisponivel>
+            <small class="disponibilidade indisponivel" [id]="'disponibilidade-' + i">
+              Produto sem opções disponíveis no momento.
+            </small>
+          </ng-template>
+
+          <button
+            class="btn btn-whatsapp"
+            type="submit"
+            [disabled]="pedidoForm.invalid || !produtoTemOpcoes(p)"
+            [attr.aria-label]="'Comprar ' + p.nome + ' pelo WhatsApp (abre em nova aba)'"
+          >
+            Comprar pelo WhatsApp
           </button>
-        </div>
+        </form>
       </article>
 
-      <p class="empty" *ngIf="listaProdutos.length === 0">
+      <p class="empty" *ngIf="carregando" role="status">Carregando produtos...</p>
+
+      <p class="empty error" *ngIf="erroAoCarregar" role="alert">
+        Não foi possível carregar os produtos. Tente novamente mais tarde.
+      </p>
+
+      <p class="empty" *ngIf="!carregando && !erroAoCarregar && listaProdutos.length === 0">
         Os produtos serão exibidos aqui assim que estiverem disponíveis.
       </p>
     </div>

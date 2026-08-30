@@ -6,8 +6,22 @@ section { background: var(--color-cream); }
 .produto-info { display: grid; gap: 10px; padding: 20px; }
 .produto-info h3, .produto-info p { margin: 0; }
 .produto-info p { min-height: 2.7em; font-size: .85rem; opacity: .75; }
-.produto-info strong { color: var(--color-burgundy); }
+.produto-info strong { color: var(--color-burgundy-dark); }
+.produto-opcoes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 4px; }
+.produto-opcao { display: grid; gap: 5px; }
+.produto-opcao label { font-size: .75rem; font-weight: 600; }
+.produto-opcao select { width: 100%; min-height: 42px; padding: 8px 30px 8px 10px; border: 1px solid rgb(31 51 39 / 65%); border-radius: var(--radius-sm); color: var(--color-forest); background: var(--color-white); font: inherit; }
+.produto-opcao select:focus-visible { outline: 3px solid var(--color-forest); outline-offset: 2px; }
+.produto-opcao select:disabled { cursor: not-allowed; opacity: .55; }
+.disponibilidade { font-size: .7rem; opacity: .68; }
+.indisponivel { color: var(--color-burgundy-dark); font-weight: 600; opacity: 1; }
 .produto-info .btn { width: 100%; margin-top: 6px; padding: 10px 18px; }
+.btn-whatsapp { color: var(--color-white); background: var(--color-forest); }
+.btn-whatsapp:hover:not(:disabled) { background: var(--color-burgundy-dark); }
+.btn-whatsapp:focus-visible { outline: 3px solid var(--color-forest); outline-offset: 2px; }
+.btn-whatsapp:disabled { cursor: not-allowed; opacity: .45; }
 .empty { grid-column: 1 / -1; padding: 32px; border: 1px dashed rgb(31 51 39 / 25%); border-radius: var(--radius); text-align: center; }
+.error { color: var(--color-burgundy-dark); border-color: var(--color-burgundy-dark); }
 @media (max-width: 900px) { .prod-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 680px) { .produto-opcoes { grid-template-columns: 1fr; } }
 @media (max-width: 560px) { .prod-grid { grid-template-columns: 1fr; } }
