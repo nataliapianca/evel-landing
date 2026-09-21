@@ -2,5 +2,11 @@
 .wrap { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 56px; }
 h1 { margin-bottom: 20px; font-size: clamp(2.4rem, 4.4vw, 3.6rem); font-style: italic; }
 p { max-width: 430px; margin-bottom: 32px; font-size: 1.05rem; opacity: .8; }
-.hero-photo { aspect-ratio: 4 / 5; }
+.hero-photo {
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  display: block;
+}
 @media (max-width: 900px) { .wrap { grid-template-columns: 1fr; } .hero-photo { max-height: 600px; } }

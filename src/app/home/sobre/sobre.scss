@@ -1,4 +1,12 @@
 .wrap { display: grid; grid-template-columns: .9fr 1.1fr; align-items: center; gap: 56px; }
-app-photo-placeholder { aspect-ratio: 1; }
+.sobre-photo {
+  aspect-ratio: 1;
+  width: 100%;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-sizing: border-box;
+}
 p { max-width: 480px; margin-bottom: 16px; opacity: .85; }
 @media (max-width: 900px) { .wrap { grid-template-columns: 1fr; } }
