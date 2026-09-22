@@ -10,12 +10,14 @@ describe('Login', () => {
   let fixture: ComponentFixture<Login>;
   let router: Router;
   const authService = {
-    loginFake: vi.fn(),
+    login: vi.fn(),
   };
 
   beforeEach(async () => {
-    authService.loginFake.mockReset();
-    authService.loginFake.mockReturnValue(of({ success: true }));
+    authService.login.mockReset();
+    authService.login.mockReturnValue(
+      of({ message: 'Login realizado com sucesso', token: 'fake-token', tokenType: 'Bearer', expiresIn: 3600 }),
+    );
 
     await TestBed.configureTestingModule({
       imports: [Login],
@@ -36,7 +38,7 @@ describe('Login', () => {
   it('should not submit an invalid form', () => {
     component.entrar();
 
-    expect(authService.loginFake).not.toHaveBeenCalled();
+    expect(authService.login).not.toHaveBeenCalled();
     expect(component.loginForm.controls.email.touched).toBe(true);
   });
 
@@ -46,7 +48,7 @@ describe('Login', () => {
 
     component.entrar();
 
-    expect(authService.loginFake).toHaveBeenCalledWith('admin@evel.com', 'senha');
+    expect(authService.login).toHaveBeenCalledWith('admin@evel.com', 'senha');
     expect(navigateSpy).toHaveBeenCalledWith('/admin/dashboard');
     expect(component.carregando).toBe(false);
   });
@@ -72,7 +74,7 @@ describe('Login', () => {
   });
 
   it('should show an error when the credentials are rejected', () => {
-    authService.loginFake.mockReturnValue(of({ success: false }));
+    authService.login.mockReturnValue(throwError(() => ({ status: 401 })));
     component.loginForm.setValue({ email: 'admin@evel.com', senha: 'incorreta' });
 
     component.entrar();
@@ -81,23 +83,23 @@ describe('Login', () => {
   });
 
   it('should keep the loading state and prevent duplicate submissions', () => {
-    const result = new Subject<{ success: boolean }>();
-    authService.loginFake.mockReturnValue(result);
+    const result = new Subject<{ message: string; token: string | null; tokenType: string | null; expiresIn: number }>();
+    authService.login.mockReturnValue(result);
     component.loginForm.setValue({ email: 'admin@evel.com', senha: 'senha' });
 
     component.entrar();
     component.entrar();
 
     expect(component.carregando).toBe(true);
-    expect(authService.loginFake).toHaveBeenCalledOnce();
+    expect(authService.login).toHaveBeenCalledOnce();
 
-    result.next({ success: false });
+    result.next({ message: 'ok', token: null, tokenType: null, expiresIn: 0 });
     result.complete();
     expect(component.carregando).toBe(false);
   });
 
   it('should restore the form after an unexpected login error', () => {
-    authService.loginFake.mockReturnValue(throwError(() => new Error('falha')));
+    authService.login.mockReturnValue(throwError(() => ({ status: 0 })));
     component.loginForm.setValue({ email: 'admin@evel.com', senha: 'senha' });
 
     component.entrar();

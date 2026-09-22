@@ -50,20 +50,23 @@ export class Login {
     this.mensagemErro = '';
     const { email, senha } = this.loginForm.getRawValue();
 
-    this.authService.loginFake(email, senha).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.authService.login(email, senha).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (result) => {
         this.carregando = false;
 
-        if (result.success) {
+        if (result.token) {
           void this.router.navigateByUrl(this.destinoAposLogin());
           return;
         }
 
         this.mensagemErro = 'E-mail ou senha inválidos.';
       },
-      error: () => {
+      error: (err) => {
         this.carregando = false;
-        this.mensagemErro = 'Não foi possível entrar. Tente novamente.';
+        this.mensagemErro =
+          err?.status === 401
+            ? 'E-mail ou senha inválidos.'
+            : 'Não foi possível entrar. Tente novamente.';
       },
     });
   }
