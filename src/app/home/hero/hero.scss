@@ -8,5 +8,6 @@ p { max-width: 430px; margin-bottom: 32px; font-size: 1.05rem; opacity: .8; }
   object-fit: cover;
   border-radius: 16px;
   display: block;
+  mix-blend-mode: multiply;
 }
 @media (max-width: 900px) { .wrap { grid-template-columns: 1fr; } .hero-photo { max-height: 600px; } }
