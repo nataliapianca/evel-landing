@@ -1,28 +1,34 @@
 import { Injectable } from '@angular/core';
-import { Observable, delay, of, tap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
 
-export interface LoginResult {
-  success: boolean;
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  message: string;
+  token: string | null;
+  tokenType: string | null;
+  expiresIn: number;
 }
 
 const ADMIN_TOKEN_KEY = 'adminToken';
-const FAKE_ADMIN_TOKEN = 'token-falso-para-teste';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  // TODO: substituir pelas credenciais validadas e pelo token emitido pela API.
-  private readonly fakeEmail = 'atelier.evel@gmail.com';
-  private readonly fakePassword = 'admin@2022';
+  private readonly apiUrl = 'https://api-loja-9224.onrender.com/api/auth/login';
 
-  loginFake(email: string, senha: string): Observable<LoginResult> {
-    const success =
-      email.trim().toLowerCase() === this.fakeEmail && senha === this.fakePassword;
+  constructor(private http: HttpClient) {}
 
-    return of({ success }).pipe(
-      delay(1000),
+  login(email: string, senha: string): Observable<LoginResponse> {
+    const body: LoginRequest = { email: email.trim(), password: senha };
+
+    return this.http.post<LoginResponse>(this.apiUrl, body).pipe(
       tap((result) => {
-        if (result.success) {
-          this.storage?.setItem(ADMIN_TOKEN_KEY, FAKE_ADMIN_TOKEN);
+        if (result.token) {
+          this.storage?.setItem(ADMIN_TOKEN_KEY, result.token);
         } else {
           this.storage?.removeItem(ADMIN_TOKEN_KEY);
         }
@@ -32,6 +38,10 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return !!this.storage?.getItem(ADMIN_TOKEN_KEY);
+  }
+
+  getToken(): string | null {
+    return this.storage?.getItem(ADMIN_TOKEN_KEY) ?? null;
   }
 
   logout(): void {

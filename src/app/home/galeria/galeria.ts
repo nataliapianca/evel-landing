@@ -6,3 +6,4 @@ import { PhotoPlaceholder } from '../../shared/components/photo-placeholder/phot
   templateUrl: './galeria.html', styleUrl: './galeria.scss',
 })
 export class Galeria {}
+
