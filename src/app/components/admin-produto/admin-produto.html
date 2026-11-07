@@ -18,19 +18,10 @@
         </h1>
         <p>
           {{ modoEdicao
-            ? 'Atualize as informações desejadas. Uma nova foto é opcional.'
+            ? 'Atualize as informações desejadas. Você pode remover fotos atuais e adicionar novas.'
             : 'Preencha os dados que serão exibidos no catálogo público.' }}
         </p>
       </div>
-
-      <aside
-        class="mock-notice"
-        *ngIf="modoEdicao"
-        aria-label="Aviso sobre o modo de demonstração"
-      >
-        <strong>Modo de demonstração:</strong> esta edição não altera o servidor e volta ao
-        recarregar a página.
-      </aside>
 
       <p class="feedback" *ngIf="carregandoProduto" role="status">Carregando produto...</p>
       <p class="feedback success" *ngIf="mensagemSucesso" role="status">
@@ -97,29 +88,91 @@
             </small>
           </div>
 
-          <div class="form-group image-field">
-            <label for="product-image">
-              {{ modoEdicao ? 'Trocar imagem (opcional)' : 'Foto do produto' }}
-            </label>
-            <input
-              #fileInput
-              id="product-image"
-              type="file"
-              (change)="onFileSelected($event)"
-              accept="image/*"
-              [required]="!modoEdicao"
-              [attr.aria-invalid]="fotoInvalida"
-              [attr.aria-describedby]="fotoInvalida ? 'product-image-error' : null"
-            >
-            <small id="product-image-error" *ngIf="fotoInvalida">
-              Selecione uma foto do produto.
-            </small>
-            <small *ngIf="arquivoSelecionado">Arquivo: {{ arquivoSelecionado.name }}</small>
-
-            <div class="current-image" *ngIf="modoEdicao && imagemAtual">
-              <img [src]="imagemAtual" alt="Imagem atual do produto">
-              <span>Imagem atual</span>
+          <div class="form-group" role="group" aria-labelledby="sizes-label">
+            <span class="group-label" id="sizes-label">Tamanhos disponíveis</span>
+            <div class="option-grid">
+              <label class="option-chip" *ngFor="let tamanho of tamanhosDisponiveis">
+                <input
+                  type="checkbox"
+                  [checked]="opcaoSelecionada('tamanhos', tamanho.valor)"
+                  (change)="alternarOpcao('tamanhos', tamanho.valor, $event)"
+                >
+                <span>{{ tamanho.valor }} <small>{{ tamanho.medida }}</small></span>
+              </label>
             </div>
+            <small *ngIf="campoInvalido('tamanhos')">Selecione ao menos um tamanho.</small>
+          </div>
+
+          <div class="form-group" role="group" aria-labelledby="colors-label">
+            <span class="group-label" id="colors-label">Cores disponíveis</span>
+            <div class="option-grid">
+              <label class="option-chip" *ngFor="let cor of coresDisponiveis">
+                <input
+                  type="checkbox"
+                  [checked]="opcaoSelecionada('cores', cor)"
+                  (change)="alternarOpcao('cores', cor, $event)"
+                >
+                <span>{{ cor }}</span>
+              </label>
+            </div>
+            <div class="custom-color">
+              <input
+                #novaCor
+                type="text"
+                maxlength="30"
+                placeholder="Outra cor (ex.: Azul)"
+                aria-label="Adicionar outra cor"
+                (keydown.enter)="adicionarCor(novaCor, $event)"
+              >
+              <button type="button" (click)="adicionarCor(novaCor)">Adicionar cor</button>
+            </div>
+            <small *ngIf="campoInvalido('cores')">Selecione ao menos uma cor.</small>
+          </div>
+
+          <div class="form-group image-field">
+            <label for="product-images">Fotos do produto</label>
+            <input
+              id="product-images"
+              type="file"
+              multiple
+              accept="image/*"
+              (change)="onFilesSelected($event)"
+              [attr.aria-invalid]="fotoInvalida"
+              [attr.aria-describedby]="fotoInvalida ? 'product-images-error' : 'product-images-hint'"
+            >
+            <small class="hint" id="product-images-hint">
+              A primeira foto é a capa. Até {{ maxFotos }} fotos; o cliente passa uma a uma no site.
+            </small>
+            <small id="product-images-error" *ngIf="fotoInvalida">
+              Adicione ao menos uma foto do produto.
+            </small>
+
+            <ul class="photo-list" *ngIf="totalFotos > 0">
+              <li class="photo-item" *ngFor="let url of fotosExistentes; let i = index">
+                <img [src]="url" [alt]="'Foto ' + (i + 1) + ' do produto'">
+                <span class="badge" *ngIf="i === 0">Capa</span>
+                <button
+                  type="button"
+                  (click)="removerFotoExistente(url)"
+                  [attr.aria-label]="'Remover a foto ' + (i + 1)"
+                >
+                  Remover
+                </button>
+              </li>
+              <li class="photo-item" *ngFor="let foto of novasFotos; let j = index">
+                <img [src]="foto.previewUrl" [alt]="'Nova foto: ' + foto.arquivo.name">
+                <span class="badge" [class.new]="fotosExistentes.length > 0 || j > 0">
+                  {{ fotosExistentes.length === 0 && j === 0 ? 'Capa' : 'Nova' }}
+                </span>
+                <button
+                  type="button"
+                  (click)="removerFotoNova(j)"
+                  [attr.aria-label]="'Remover a nova foto ' + foto.arquivo.name"
+                >
+                  Remover
+                </button>
+              </li>
+            </ul>
           </div>
 
           <div class="form-actions">

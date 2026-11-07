@@ -8,7 +8,7 @@
     <div class="prod-grid">
       <article *ngFor="let p of listaProdutos(); let i = index" class="prod-card">
         <div class="img-wrapper">
-          <img [src]="p.imagemUrl" [alt]="p.nome">
+          <app-produto-carrossel [imagens]="imagensDoProduto(p)" [alt]="p.nome" />
         </div>
         <form
           #pedidoForm="ngForm"
@@ -33,8 +33,8 @@
                 required
               >
                 <option value="" selected disabled>Selecione</option>
-                <option *ngFor="let opcao of opcoesDeTamanho(p)" [value]="opcao">
-                  {{ opcao }}
+                <option *ngFor="let opcao of opcoesDeTamanho(p)" [value]="opcao.valor">
+                  {{ opcao.rotulo }}
                 </option>
               </select>
             </div>

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { ProdutoService } from '../../core/services/produto.service';
@@ -15,62 +16,70 @@ import { Product } from '../../shared/models/product.model';
 export class ProductList implements OnInit {
   private readonly produtoService = inject(ProdutoService);
 
-  produtos: Product[] = [];
-  carregando = true;
-  mensagemErro = '';
-  mensagemSucesso = '';
-  excluindoId: string | null = null;
+  // Signals: o projeto é zoneless, então só signals atualizam a tela sozinhos.
+  produtos = signal<Product[]>([]);
+  carregando = signal(true);
+  mensagemErro = signal('');
+  mensagemSucesso = signal('');
+  excluindoId = signal<string | null>(null);
 
   ngOnInit(): void {
     this.carregarProdutos();
   }
 
   carregarProdutos(): void {
-    this.carregando = true;
-    this.mensagemErro = '';
+    this.carregando.set(true);
+    this.mensagemErro.set('');
 
     this.produtoService.listar().subscribe({
       next: (produtos) => {
-        this.produtos = produtos;
-        this.carregando = false;
+        this.produtos.set(produtos);
+        this.carregando.set(false);
       },
       error: () => {
-        this.carregando = false;
-        this.mensagemErro = 'Não foi possível carregar os produtos.';
+        this.carregando.set(false);
+        this.mensagemErro.set('Não foi possível carregar os produtos.');
       },
     });
   }
 
   excluirProduto(produto: Product, id: string): void {
-    if (this.excluindoId) {
+    if (this.excluindoId()) {
       return;
     }
 
     const confirmou = window.confirm(
-      `Remover “${produto.nome}” da lista desta demonstração?`,
+      `Excluir “${produto.nome}” definitivamente? Essa ação não pode ser desfeita.`,
     );
     if (!confirmou) {
       return;
     }
 
-    this.excluindoId = id;
-    this.mensagemErro = '';
-    this.mensagemSucesso = '';
+    this.excluindoId.set(id);
+    this.mensagemErro.set('');
+    this.mensagemSucesso.set('');
 
     this.produtoService.deleteProduct(id).subscribe({
       next: () => {
-        this.produtos = this.produtos.filter((item) => item.id !== id);
-        this.excluindoId = null;
-        this.mensagemSucesso = 'Produto removido somente desta visualização.';
+        this.produtos.update((lista) => lista.filter((item) => item.id !== id));
+        this.excluindoId.set(null);
+        this.mensagemSucesso.set('Produto excluído com sucesso.');
       },
-      error: () => {
-        this.excluindoId = null;
-        this.mensagemErro = 'Não foi possível simular a exclusão do produto.';
+      error: (erro: unknown) => {
+        this.excluindoId.set(null);
+        this.mensagemErro.set(this.mensagemDeErro(erro, 'Não foi possível excluir o produto.'));
       },
     });
   }
 
   trackByProduto(index: number, produto: Product): string {
     return produto.id ?? `produto-${index}`;
+  }
+
+  private mensagemDeErro(erro: unknown, padrao: string): string {
+    if (erro instanceof HttpErrorResponse && (erro.status === 401 || erro.status === 403)) {
+      return 'Sua sessão expirou ou você não tem permissão. Entre novamente no painel.';
+    }
+    return padrao;
   }
 }

@@ -5,6 +5,7 @@ export interface Product {
   descricao: string;
   preco: number;
   imagemUrl: string;
+  imagens?: string[];
   tamanhos?: string[];
   cores?: string[];
 }

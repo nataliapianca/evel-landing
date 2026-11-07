@@ -5,22 +5,33 @@ import { FormsModule } from '@angular/forms';
 import { ProdutoService } from '../../core/services/produto.service';
 import { Product } from '../../shared/models/product.model';
 import { WhatsappService } from '../../core/services/whatsapp.service';
+import { ProdutoCarrossel } from '../../shared/components/produto-carrossel/produto-carrossel';
+
+interface OpcaoTamanho {
+  valor: string;
+  rotulo: string;
+}
 
 @Component({
   selector: 'app-produtos',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ProdutoCarrossel],
   templateUrl: './produtos.html',
   styleUrls: ['./produtos.scss']
 })
 export class Produtos implements OnInit {
   // Signals: necessários porque o projeto é zoneless (sem zone.js).
-  // Só mudanças em signals fazem o Angular redesenhar a tela automaticamente.
   listaProdutos = signal<Product[]>([]);
   carregando = signal(true);
   erroAoCarregar = signal(false);
 
-  readonly tamanhosPadrao = ['PP', 'P', 'M', 'G', 'GG'];
+  // Tabela de medidas da Evel (letra -> numeração)
+  readonly medidasPorTamanho: Readonly<Record<string, string>> = {
+    P: '36 a 40',
+    M: '42 a 44',
+    G: '46 a 48',
+  };
+  readonly tamanhosPadrao = ['P', 'M', 'G'];
   readonly coresPadrao = ['Preto', 'Branco', 'Rosa', 'Bordô', 'Blush'];
 
   constructor(
@@ -43,8 +54,16 @@ export class Produtos implements OnInit {
     });
   }
 
-  opcoesDeTamanho(produto: Product): readonly string[] {
-    return produto.tamanhos ?? this.tamanhosPadrao;
+  // Várias fotos viram carrossel; produtos antigos (só imagemUrl) continuam funcionando.
+  imagensDoProduto(produto: Product): readonly string[] {
+    return produto.imagens?.length ? produto.imagens : [produto.imagemUrl];
+  }
+
+  opcoesDeTamanho(produto: Product): readonly OpcaoTamanho[] {
+    return (produto.tamanhos ?? this.tamanhosPadrao).map((tamanho) => {
+      const medida = this.medidasPorTamanho[tamanho];
+      return { valor: tamanho, rotulo: medida ? `${tamanho} – ${medida}` : tamanho };
+    });
   }
 
   opcoesDeCor(produto: Product): readonly string[] {
