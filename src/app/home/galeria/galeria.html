@@ -1,13 +1,18 @@
 <section class="section" id="galeria">
   <div class="wrap">
     <div class="section-head"><span class="eyebrow">Instagram</span><h2>@atelier.evel</h2></div>
-    <div class="gallery-grid">
-      <app-photo-placeholder label="Post 1" />
-      <app-photo-placeholder label="Post 2" />
-      <app-photo-placeholder label="Post 3" />
-      <app-photo-placeholder label="Post 4" />
-      <app-photo-placeholder label="Post 5" />
-      <app-photo-placeholder label="Post 6" />
-    </div>
+
+    @if (mostrar()) {
+      <div class="gallery-grid">
+        @for (url of posts; track url) {
+          <div class="gallery-item">
+            <blockquote class="instagram-media" data-instgrm-version="14" [attr.data-instgrm-permalink]="url">
+              <!-- Link de reserva: aparece se o Instagram estiver bloqueado ou indisponível -->
+              <a [href]="url" target="_blank" rel="noopener noreferrer">Ver este post no Instagram</a>
+            </blockquote>
+          </div>
+        }
+      </div>
+    }
   </div>
 </section>

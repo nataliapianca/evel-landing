@@ -30,6 +30,7 @@ export class Produtos implements OnInit {
     P: '36 a 40',
     M: '42 a 44',
     G: '46 a 48',
+    GG: '50 a 52',
   };
   readonly tamanhosPadrao = ['P', 'M', 'G'];
   readonly coresPadrao = ['Preto', 'Branco', 'Rosa', 'Bordô', 'Blush'];

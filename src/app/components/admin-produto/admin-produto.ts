@@ -28,6 +28,7 @@ const TAMANHOS_DISPONIVEIS = [
   { valor: 'P', medida: '36 a 40' },
   { valor: 'M', medida: '42 a 44' },
   { valor: 'G', medida: '46 a 48' },
+  { valor: 'GG', medida: '50 a 52' },
 ];
 
 const CORES_INICIAIS = ['Preto', 'Branco', 'Rosa', 'Bordô', 'Blush', 'Vermelho'];
