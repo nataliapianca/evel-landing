@@ -1,5 +1,5 @@
-// src/app/components/produtos/produtos.component.ts
-import { Component, OnInit } from '@angular/core';
+// src/app/components/produtos/produtos.ts
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProdutoService } from '../../core/services/produto.service';
@@ -14,9 +14,12 @@ import { WhatsappService } from '../../core/services/whatsapp.service';
   styleUrls: ['./produtos.scss']
 })
 export class Produtos implements OnInit {
-  listaProdutos: Product[] = [];
-  carregando = true;
-  erroAoCarregar = false;
+  // Signals: necessários porque o projeto é zoneless (sem zone.js).
+  // Só mudanças em signals fazem o Angular redesenhar a tela automaticamente.
+  listaProdutos = signal<Product[]>([]);
+  carregando = signal(true);
+  erroAoCarregar = signal(false);
+
   readonly tamanhosPadrao = ['PP', 'P', 'M', 'G', 'GG'];
   readonly coresPadrao = ['Preto', 'Branco', 'Rosa', 'Bordô', 'Blush'];
 
@@ -29,12 +32,12 @@ export class Produtos implements OnInit {
     // Busca os produtos cadastrados na API (MongoDB + Cloudinary)
     this.produtoService.listar().subscribe({
       next: (dados) => {
-        this.listaProdutos = dados;
-        this.carregando = false;
+        this.listaProdutos.set(dados);
+        this.carregando.set(false);
       },
       error: (err) => {
-        this.carregando = false;
-        this.erroAoCarregar = true;
+        this.carregando.set(false);
+        this.erroAoCarregar.set(true);
         console.error('Erro ao carregar os produtos:', err);
       }
     });

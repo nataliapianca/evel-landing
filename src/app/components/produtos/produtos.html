@@ -6,7 +6,7 @@
     </div>
 
     <div class="prod-grid">
-      <article *ngFor="let p of listaProdutos; let i = index" class="prod-card">
+      <article *ngFor="let p of listaProdutos(); let i = index" class="prod-card">
         <div class="img-wrapper">
           <img [src]="p.imagemUrl" [alt]="p.nome">
         </div>
@@ -82,13 +82,13 @@
         </form>
       </article>
 
-      <p class="empty" *ngIf="carregando" role="status">Carregando produtos...</p>
+      <p class="empty" *ngIf="carregando()" role="status">Carregando produtos...</p>
 
-      <p class="empty error" *ngIf="erroAoCarregar" role="alert">
+      <p class="empty error" *ngIf="erroAoCarregar()" role="alert">
         Não foi possível carregar os produtos. Tente novamente mais tarde.
       </p>
 
-      <p class="empty" *ngIf="!carregando && !erroAoCarregar && listaProdutos.length === 0">
+      <p class="empty" *ngIf="!carregando() && !erroAoCarregar() && listaProdutos().length === 0">
         Os produtos serão exibidos aqui assim que estiverem disponíveis.
       </p>
     </div>

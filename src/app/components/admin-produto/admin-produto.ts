@@ -1,6 +1,14 @@
 // src/app/components/admin-produto/admin-produto.ts
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -25,6 +33,8 @@ export class AdminProduto implements OnInit {
   @ViewChild('fileInput') private fileInput?: ElementRef<HTMLInputElement>;
 
   private readonly destroyRef = inject(DestroyRef);
+  // Projeto zoneless: mudanças feitas dentro de subscribe() precisam avisar o Angular.
+  private readonly cdr = inject(ChangeDetectorRef);
 
   produtoForm: FormGroup;
   arquivoSelecionado: File | null = null;
@@ -133,12 +143,16 @@ export class AdminProduto implements OnInit {
             this.fileInput.nativeElement.value = '';
           }
         }
+
+        this.cdr.markForCheck();
       },
       error: () => {
         this.salvando = false;
         this.mensagemErro = this.modoEdicao
           ? 'Não foi possível simular a atualização do produto.'
           : 'Não foi possível cadastrar o produto.';
+
+        this.cdr.markForCheck();
       },
     });
   }
@@ -163,6 +177,8 @@ export class AdminProduto implements OnInit {
     } else {
       this.produtoForm.enable();
     }
+
+    this.cdr.markForCheck();
   }
 
   private aplicarProdutoCarregado(resultado: ResultadoCarregamento): void {
@@ -171,12 +187,14 @@ export class AdminProduto implements OnInit {
     if (resultado.erro) {
       this.edicaoBloqueada = true;
       this.mensagemErro = 'Não foi possível carregar o produto.';
+      this.cdr.markForCheck();
       return;
     }
 
     if (!resultado.produto) {
       this.edicaoBloqueada = true;
       this.mensagemErro = 'Produto não encontrado.';
+      this.cdr.markForCheck();
       return;
     }
 
@@ -187,5 +205,6 @@ export class AdminProduto implements OnInit {
       preco: resultado.produto.preco,
     });
     this.imagemAtual = resultado.produto.imagemUrl;
+    this.cdr.markForCheck();
   }
 }
