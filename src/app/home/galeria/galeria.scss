@@ -1,27 +1,7 @@
 :host { display: block; }
 
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 326px), 1fr));
-  gap: 24px;
-  align-items: start;
-}
+// Ajuste a altura (height) até o feed aparecer inteiro, sem barra de rolagem interna.
+.feed { display: block; width: 100%; height: 600px; border: 0; }
+@media (max-width: 700px) { .feed { height: 520px; } }
 
-.gallery-item { min-width: 0; }
-
-// O Instagram troca o <blockquote> por um <iframe> criado pelo script dele,
-// por isso o ::ng-deep (o iframe não recebe o atributo de estilo do Angular).
-:host ::ng-deep .instagram-media {
-  width: 100% !important;
-  min-width: 0 !important;
-  max-width: 540px !important;
-  margin: 0 auto !important;
-}
-
-// Aparência do cartão enquanto o Instagram ainda não carregou.
-:host ::ng-deep blockquote.instagram-media {
-  padding: 16px;
-  border-radius: 3px;
-  background: #fff;
-  box-shadow: 0 0 1px rgb(0 0 0 / 50%), 0 1px 10px rgb(0 0 0 / 15%);
-}
+.seguir { display: inline-block; margin-top: 18px; font-weight: 700; text-decoration: underline; }

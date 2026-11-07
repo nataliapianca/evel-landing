@@ -2,17 +2,15 @@
   <div class="wrap">
     <div class="section-head"><span class="eyebrow">Instagram</span><h2>@atelier.evel</h2></div>
 
-    @if (mostrar()) {
-      <div class="gallery-grid">
-        @for (url of posts; track url) {
-          <div class="gallery-item">
-            <blockquote class="instagram-media" data-instgrm-version="14" [attr.data-instgrm-permalink]="url">
-              <!-- Link de reserva: aparece se o Instagram estiver bloqueado ou indisponível -->
-              <a [href]="url" target="_blank" rel="noopener noreferrer">Ver este post no Instagram</a>
-            </blockquote>
-          </div>
-        }
-      </div>
-    }
+    <iframe
+      class="feed"
+      src="https://emb.fouita.com/widget/0x57ae4e/ftasn87gf"
+      title="Feed do Instagram @atelier.evel"
+      loading="lazy"
+    ></iframe>
+
+    <a class="seguir" href="https://www.instagram.com/atelier.evel/" target="_blank" rel="noopener noreferrer">
+      Seguir @atelier.evel no Instagram
+    </a>
   </div>
 </section>
