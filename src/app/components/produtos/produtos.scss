@@ -22,6 +22,14 @@ section { background: var(--color-cream); }
 .btn-whatsapp:disabled { cursor: not-allowed; opacity: .45; }
 .empty { grid-column: 1 / -1; padding: 32px; border: 1px dashed rgb(31 51 39 / 25%); border-radius: var(--radius); text-align: center; }
 .error { color: var(--color-burgundy-dark); border-color: var(--color-burgundy-dark); }
+.empty p { margin: 0; }
+.empty .btn { margin-top: 14px; }
+.loading { display: grid; justify-items: center; gap: 10px; }
+.loading-title { font-weight: 600; }
+.loading-hint { max-width: 460px; font-size: .85rem; opacity: .75; }
+.spinner { width: 28px; height: 28px; border: 3px solid rgb(31 51 39 / 18%); border-top-color: var(--color-forest); border-radius: 50%; animation: girar .9s linear infinite; }
+@keyframes girar { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
 @media (max-width: 900px) { .prod-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 680px) { .produto-opcoes { grid-template-columns: 1fr; } }
 @media (max-width: 560px) { .prod-grid { grid-template-columns: 1fr; } }

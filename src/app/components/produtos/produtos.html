@@ -82,11 +82,21 @@
         </form>
       </article>
 
-      <p class="empty" *ngIf="carregando()" role="status">Carregando produtos...</p>
+      <div class="empty loading" *ngIf="carregando()" role="status" aria-live="polite">
+        <span class="spinner" aria-hidden="true"></span>
+        <p class="loading-title">Carregando produtos...</p>
+        <p class="loading-hint" *ngIf="demorando()">
+          Estamos preparando a vitrine. Na primeira visita depois de um tempo, isso pode levar
+          até 1 minuto. Já já as peças aparecem!
+        </p>
+      </div>
 
-      <p class="empty error" *ngIf="erroAoCarregar()" role="alert">
-        Não foi possível carregar os produtos. Tente novamente mais tarde.
-      </p>
+      <div class="empty error" *ngIf="erroAoCarregar()" role="alert">
+        <p>Não foi possível carregar os produtos agora.</p>
+        <button type="button" class="btn btn-whatsapp" (click)="carregarProdutos()">
+          Tentar novamente
+        </button>
+      </div>
 
       <p class="empty" *ngIf="!carregando() && !erroAoCarregar() && listaProdutos().length === 0">
         Os produtos serão exibidos aqui assim que estiverem disponíveis.
