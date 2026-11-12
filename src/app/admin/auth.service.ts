@@ -37,15 +37,50 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.storage?.getItem(ADMIN_TOKEN_KEY);
+    return !!this.getToken();
   }
 
+  // Devolve o token só se ainda estiver válido; token vencido é apagado na hora.
   getToken(): string | null {
-    return this.storage?.getItem(ADMIN_TOKEN_KEY) ?? null;
+    const token = this.storage?.getItem(ADMIN_TOKEN_KEY) ?? null;
+    if (!token) {
+      return null;
+    }
+
+    if (this.tokenExpirado(token)) {
+      this.logout();
+      return null;
+    }
+
+    return token;
   }
 
   logout(): void {
     this.storage?.removeItem(ADMIN_TOKEN_KEY);
+  }
+
+  // Lê o campo "exp" (em segundos) do JWT. Se não der para ler, deixa o servidor decidir.
+  private tokenExpirado(token: string): boolean {
+    try {
+      const payload = token.split('.')[1];
+      if (!payload) {
+        return false;
+      }
+
+      const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+      const json = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + c.charCodeAt(0).toString(16).padStart(2, '0'))
+          .join(''),
+      );
+      const { exp } = JSON.parse(json) as { exp?: number };
+
+      // Margem de 10 s para não enviar um token prestes a vencer.
+      return typeof exp === 'number' && exp * 1000 <= Date.now() + 10_000;
+    } catch {
+      return false;
+    }
   }
 
   private get storage(): Storage | null {
